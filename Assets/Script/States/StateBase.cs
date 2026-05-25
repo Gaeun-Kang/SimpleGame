@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StateBase : MonoBehaviour
+public abstract class StateBase 
 {
-    public PlayerState pstate;
+    protected Player player;
+    public StateBase(Player player)
+    { this.player = player; }
 
     public abstract void Enter();
     public abstract void Exit();
