@@ -14,21 +14,20 @@ public class Walk : StateBase
     {
         Debug.Log("Walk State");
         player.OnEnterMine += EntertoMine;
+        player.OnWorkStation += EntertoWorkStation;
     }
 
     public override void Exit()
     {
         player.OnEnterMine -= EntertoMine;
+        player.OnWorkStation -= EntertoWorkStation;
     }
 
     public override void UpdateState()
     {
-        player.HandleInput();
-        if (player.isMoving == true)
-        {
-            player.Walking();
-        }       
+
     }
+
 
     private void EntertoMine()
     {
@@ -37,7 +36,7 @@ public class Walk : StateBase
 
     private void EntertoWorkStation()
     {
-
+        player.ChangeState(new Make(player));
     }
 
 

@@ -47,7 +47,6 @@ public class ItemManager : MonoBehaviour
     private int playerHandcuffs;
     private int playerCurrency;
 
-    // 공개 읽기 전용 프로퍼티
     public int PlayerRocks => playerRocks;
     public int PlayerHandcuffs => playerHandcuffs;
     public int PlayerCurrency => playerCurrency;
@@ -137,8 +136,8 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    /// RockPickup 컴포넌트가 플레이어 충돌 시 호출합니다.
-    /// 보유량이 MAX면 UIManager에 알리고 채집을 막습니다.
+    //RockPickup 컴포넌트가 플레이어 충돌 시 호출합니다.
+    //보유량이 MAX면 UIManager에 알리고 채집 방지
 
     public bool TryCollectRock(GameObject rockObject)
     {
@@ -196,7 +195,7 @@ public class ItemManager : MonoBehaviour
         playerRocks--;
         OnRocksChanged?.Invoke(playerRocks);
         //돌소모 함수 
-        //rockBag?.Pop();
+        rockBag?.minusRock();
 
         // 수갑 산출 위치 결정
         Vector3 spawnPos = handcuffSpawnPoint != null
@@ -285,9 +284,16 @@ public class ItemManager : MonoBehaviour
     }
 
     //NPC 전용 메서드
-
-
     //WorkerNPC 전용 
+
+    public void ProduceHandcuffFromWorker()
+    {
+        Vector3 spawnPos = handcuffSpawnPoint != null
+                           ? handcuffSpawnPoint.position
+                           : Vector3.zero;
+        SpawnHandcuff(spawnPos);
+    }
+
     public void NotifyWorkerCollected(GameObject rockObject)
     {
         if (!rockObjectToSlot.TryGetValue(rockObject, out int slotIndex)) return;

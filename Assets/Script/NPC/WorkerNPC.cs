@@ -63,7 +63,7 @@ public class WorkerNPC : MonoBehaviour
 
                 // WorkStationø° Rock ≈ı¿‘
                 var ws = workStationTransform.GetComponent<WorkStation>();
-                ws?.DepositRockFromWorker();
+                ws?.DepositRockFromWorker(targetRock);
 
                 isCarrying = false;
             }

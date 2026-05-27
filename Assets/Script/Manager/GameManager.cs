@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public SoundManager SoundManager { get; private set; }
     public ItemManager ItemManager { get; private set; }
 
+    public StateManager StateManager { get; private set; }
+
 
     protected void Awake()
     {
@@ -24,6 +26,6 @@ public class GameManager : MonoBehaviour
         UiManager = FindObjectOfType<UIManager>();
         SoundManager = FindObjectOfType<SoundManager>();
         ItemManager = FindObjectOfType<ItemManager>();
-
+        StateManager = FindObjectOfType<StateManager>();
     }
 }

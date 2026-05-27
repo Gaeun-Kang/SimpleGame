@@ -21,9 +21,10 @@ public class Idle : StateBase
         
     }
 
+
     public override void UpdateState()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetMouseButtonDown(0))
         {
             player.ChangeState(new Walk(player));
         }

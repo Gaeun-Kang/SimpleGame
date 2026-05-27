@@ -6,10 +6,16 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+
+    public static UIManager Instance { get; private set; }
     [SerializeField] private GameObject Logo;
     [SerializeField] private Button SoundBt;
     [SerializeField] private Button PlayBt;
-  
+
+    [Header("2D Ui 위치")]
+    [SerializeField] private Sprite WorkInput;
+    [SerializeField] private Sprite WorkOutput;
+
 
     [Header("3D UI 위치")]
     [SerializeField] private Transform ArrowUIpos;
@@ -21,8 +27,6 @@ public class UIManager : MonoBehaviour
        SoundBt = GetComponent<Button>();
     }
 
-    public static UIManager Instance { get; private set; }
-
     //게임 플레이 중 상시 UI
 
     public void OnGameUI()
@@ -33,7 +37,21 @@ public class UIManager : MonoBehaviour
 
     }
  
+    //이벤트성 
 
+    //유저 WorkStation 입장 시 
+    public void SpriteColorChange(SpriteRenderer targetSprite,Color targetColor)
+    {
+        if (targetSprite != null)
+        {
+            targetSprite.color = targetColor;
+        }
+    }
+
+   public void CriminalPopupUI()
+    {
+
+    }
     
     public void ArrowUI()
     {

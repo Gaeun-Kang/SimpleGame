@@ -3,17 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+//범인 : 체포 - MovetoJail 관련 스크립트 
+//체포 시 외관 변경 미구현 
+
 public class CriminalNPC : MonoBehaviour
 {
-    [SerializeField] private float arrivalThreshold = 0.5f; 
-    
+    [SerializeField] private float arrivalThreshold = 0.5f;
+
+
+    [Header("Nav 관련")]
+    [SerializeField] private Transform WaitingPoint;
+    [SerializeField] private Transform jailTransform;
+    [SerializeField] private NavMeshAgent agent;
+
     public int RequiredHandcuffs { get; private set; }
     public bool IsBeingArrested { get; private set; }
 
     private NPCManager npcManager;
-    private Transform jailTransform;
-    private NavMeshAgent agent;
     private Renderer[] renderes;
+
+    private bool isWaiting = false;
+
+    void Start()
+    {
+        MovetoWaitingpoint();    
+    }
 
     public void Init(NPCManager manager, Transform jail)
     {
@@ -30,11 +44,49 @@ public class CriminalNPC : MonoBehaviour
         RequiredHandcuffs = Random.Range(1, 5);   
         //UI Manager에게서 수갑 popup 받아올 것
 
-  
-
         agent.enabled = true;
         agent.isStopped = false;
     }
+
+    private void Update()
+    {
+        if(!isWaiting && agent.hasPath)
+        {
+            if(CheckArrival())
+            {
+               //UI pop up
+            }
+        }
+    }
+
+    private void MovetoWaitingpoint()
+    {
+        if (WaitingPoint == null)
+        {
+            Debug.LogWarning("Waiting Point 누락");
+            return;
+        }
+
+        isWaiting = false;
+        agent.isStopped = false;
+        agent.SetDestination(WaitingPoint.position);
+    }
+
+    private bool CheckArrival()
+    {
+        if (agent.pathPending) return false;
+
+      
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void Arrest()
     {

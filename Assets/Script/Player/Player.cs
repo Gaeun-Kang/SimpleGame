@@ -11,7 +11,14 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameManager gameManager;
 
+    [Header("input 관련")]
     [SerializeField] private float MoveSpeed = 5.0f;
+    [SerializeField] private FixedJoystick joystick;
+
+
+    [SerializeField] private GameObject SpawnAxe;
+    [SerializeField] private Transform Handpoint;
+
     private Vector3 targetPos;
     private Vector3 dir;
     public bool isMoving;
@@ -44,46 +51,35 @@ public class Player : MonoBehaviour
 
     }
 
-    public void HandleInput()
+    private void FixedUpdate()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if(Physics.Raycast(ray, out hit, 100f))
-            {
-                //Deubg.Log("move");
-                targetPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-                isMoving = true;
-            }
-
-          
-        }
+        Walking();
     }
 
     public void Walking()
     {
-        Vector3 dir = targetPos - transform.position;
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 right = Camera.main.transform.right;
+        forward.y = 0f;
+        right.y = 0f;
+        forward.Normalize();
+        right.Normalize();
 
-        if (dir.magnitude < 0.05f)
+        Vector3 direction = forward * joystick.Vertical + right * joystick.Horizontal;
+
+        // direction.magnitude가 0보다 클 때만 이동 및 회전 처리
+        if (direction.magnitude > 0.01f)
         {
-            transform.position = targetPos; // 위치를 목적지에 딱 맞춰줌
-            isMoving = false;
-            return;
+            transform.Translate(direction * MoveSpeed * Time.fixedDeltaTime, Space.World);
+            transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        // 1. 이동 처리 (방향 * 시간 * 속도)
-        transform.position += dir.normalized * Time.deltaTime * MoveSpeed;
+    }
 
-        // 2. 회전 처리 (Quaternion.Slerp와 Time.deltaTime을 활용해 부드럽게 프레임 독립적 회전)
-        if (dir != Vector3.zero)
-        {
-            Quaternion lookTarget = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookTarget, Time.deltaTime * MoveSpeed);
-        }
-
-
+    public GameObject SpawnAxeAtHand()
+    {
+        GameObject Spawnobject = Instantiate(SpawnAxe, Handpoint.position, Quaternion.identity);
+        return Spawnobject;
     }
 
     //Event
