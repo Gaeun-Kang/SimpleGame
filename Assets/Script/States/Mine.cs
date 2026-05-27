@@ -20,8 +20,11 @@ public class Mine : StateBase
 
     public override void UpdateState()
     {
-        player.Walking();
-
+        player.HandleInput();
+        if (player.isMoving == true)
+        {
+            player.Walking();
+        }
 
         //채굴 애니메이션 재생 
 

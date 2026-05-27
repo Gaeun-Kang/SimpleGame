@@ -23,8 +23,11 @@ public class Walk : StateBase
 
     public override void UpdateState()
     {
-        player.Walking();
-       
+        player.HandleInput();
+        if (player.isMoving == true)
+        {
+            player.Walking();
+        }       
     }
 
     private void EntertoMine()

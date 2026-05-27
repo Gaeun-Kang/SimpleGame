@@ -5,18 +5,14 @@ using UnityEngine;
 public class CameraTracking : MonoBehaviour
 {
 
-    //모바일게임 쿼터뷰로 만들것 
+    //쿼터뷰풍 카메라 세팅 
     [SerializeField] private Transform target;
-    private Transform tr;
-    void Start()
+    [SerializeField] private Vector3 offset;
+
+
+    private void Update()
     {
-        tr = GetComponent<Transform>();
- 
+        transform.position = target.position + offset; 
     }
 
-    void LateUpdate()
-    {
-        tr.position = new Vector3(tr.position.x + target.transform.position.x, tr.position.y, tr.position.z);
-        tr.LookAt(target);
-    }
 }

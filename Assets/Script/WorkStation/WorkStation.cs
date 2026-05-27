@@ -18,6 +18,11 @@ public class WorkStation : MonoBehaviour
             Debug.Log("¿€º∫¡ﬂ");
 
         }
+    }
+
+    public void DepositRockFromWorker()
+    {
 
     }
+
 }

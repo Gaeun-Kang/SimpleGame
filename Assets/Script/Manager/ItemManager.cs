@@ -150,7 +150,7 @@ public class ItemManager : MonoBehaviour
         if (playerRocks >= maxRocks)
         {
             // 채집 불가 → MAX UI 요청 (UIManager 전담)
-           // UIManager.Instance?.ShowMaxUI(ItemType.Rock);
+           UIManager.Instance?.ShowMaxUI(ItemType.Rock);
             return false;
         }
 
@@ -284,4 +284,45 @@ public class ItemManager : MonoBehaviour
         return true;
     }
 
+    //NPC 전용 메서드
+
+
+    //WorkerNPC 전용 
+    public void NotifyWorkerCollected(GameObject rockObject)
+    {
+        if (!rockObjectToSlot.TryGetValue(rockObject, out int slotIndex)) return;
+
+        RockSlot slot = rockSlots[slotIndex];
+        slot.IsActive = false;
+
+        if (!slot.IsRespawning)
+            StartCoroutine(RespawnRockRoutine(slotIndex));
+    }
+
+    //PoliceNPC 전용 
+    public int CollectHandcuffsAtOutput()
+    {
+        if (handcuffSpawnPoint == null) return 0;
+
+        float pickupRadius = 1.0f;
+        int collected = 0;
+
+        // 역방향 순회 (Remove 안전)
+        for (int i = activeHandcuffs.Count - 1; i >= 0; i--)
+        {
+            var hc = activeHandcuffs[i];
+            if (hc == null || !hc.activeSelf) continue;
+
+            float dist = Vector3.Distance(hc.transform.position, handcuffSpawnPoint.position);
+            if (dist <= pickupRadius)
+            {
+                activeHandcuffs.RemoveAt(i);
+                hc.SetActive(false);
+                handcuffPool.Enqueue(hc);
+                collected++;
+            }
+        }
+
+        return collected;
+    }
 }

@@ -25,7 +25,5 @@ public class GameManager : MonoBehaviour
         SoundManager = FindObjectOfType<SoundManager>();
         ItemManager = FindObjectOfType<ItemManager>();
 
- 
-
     }
 }
